@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function ensureDefaultUser() {
         const u = loadUsers();
         if (!u || u.length === 0) {
-            const def = [{ name: 'Mahasiswa UT', email: 'mahasiswa@ut.ac.id', password: '123456', nim: '00000000', role: 'Mahasiswa Aktif' }];
+            const def = [{ name: 'Mahasiswa UT', email: 'mahasiswa@ut.ac.id', password: '123456', nim: '99000000', role: 'Mahasiswa Aktif' }];
             saveUsers(def);
             return def;
         }
