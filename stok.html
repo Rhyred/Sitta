@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA - Stok Bahan Ajar</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">Aplikasi SITTA</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="stok.html" class="active">Informasi Bahan Ajar</a></li>
+                <li><a href="tracking.html">Tracking Pengiriman</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="stok-container">
+        <h2>Peragaan Data Bahan Ajar</h2>
+
+        <div class="add-stok-form">
+            <input type="text" id="inputKode" placeholder="Kode Barang">
+            <input type="text" id="inputNama" placeholder="Nama Barang">
+            <input type="number" id="inputStok" placeholder="Jumlah Stok">
+            <button id="btnTambahStok" class="btn-primary">Tambah Stok</button>
+        </div>
+
+        <div id="stokList" class="stok-grid">
+            <!-- Data dirender melalui JS -->
+        </div>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA - Tracking</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">Aplikasi SITTA</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="stok.html">Informasi Bahan Ajar</a></li>
+                <li><a href="tracking.html" class="active">Tracking Pengiriman</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="tracking-container">
+        <div class="search-box">
+            <label for="noDO">No. DO/Billing</label>
+            <input type="text" id="noDO" placeholder="Masukkan Nomor DO">
+            <button id="btnCariDO" class="btn-warning">Cari</button>
+        </div>
+
+        <section id="trackingResult" class="hidden">
+            <div class="tracking-header">
+                <h3>ROIKA HEPRIDA SITIO</h3>
+                <p>18503964874</p>
+            </div>
+            <div class="tracking-body">
+                <h4>Perjalanan Paket</h4>
+                <ul class="progress-list">
+                    <li>Paket dikirim dari pusat (2025-03-20)</li>
+                    <li>Tiba di HUB Sumatera (2025-03-22)</li>
+                    <li>Dalam proses pengantaran kurir (2025-03-24)</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

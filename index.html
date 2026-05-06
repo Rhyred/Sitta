@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA — Masuk</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #6C8EBF;
+            --primary-dk: #4A6FA5;
+            --primary-lt: #EAF0F8;
+            --accent: #F4A261;
+            --accent-lt: #FEF1E6;
+            --bg: #F5F3EE;
+            --card: #FFFFFF;
+            --text: #2D3142;
+            --muted: #8892A4;
+            --border: #DFE3EC;
+            --success: #6DB57A;
+            --radius: 18px;
+            --shadow: 0 8px 40px rgba(108, 142, 191, .12), 0 2px 8px rgba(108, 142, 191, .08);
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ── decorative blobs ── */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .45;
+            pointer-events: none;
+            animation: drift 14s ease-in-out infinite alternate;
+        }
+
+        .blob-1 {
+            width: 420px;
+            height: 420px;
+            background: #C5D9F0;
+            top: -120px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 320px;
+            height: 320px;
+            background: #FAD5AF;
+            bottom: -80px;
+            right: -60px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 220px;
+            height: 220px;
+            background: #C8E6D4;
+            top: 50%;
+            left: 55%;
+            animation-delay: -9s;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            100% {
+                transform: translate(30px, 20px) scale(1.06)
+            }
+        }
+
+        /* ── layout ── */
+        .page {
+            display: flex;
+            align-items: stretch;
+            width: min(900px, 96vw);
+            min-height: 540px;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: rise .6s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(28px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        /* ── left panel ── */
+        .panel-left {
+            width: 44%;
+            background: linear-gradient(155deg, #4A6FA5 0%, #6C8EBF 55%, #8EB4D4 100%);
+            padding: 52px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-left::before {
+            content: '';
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 40px solid rgba(255, 255, 255, .08);
+            bottom: -80px;
+            right: -80px;
+        }
+
+        .panel-left::after {
+            content: '';
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 24px solid rgba(255, 255, 255, .06);
+            top: -40px;
+            right: 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 64px;
+            height: 64px;
+            background: #fff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .12);
+            flex-shrink: 0;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 26px;
+            letter-spacing: .5px;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            opacity: .7;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .panel-tagline {
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-tagline h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .panel-tagline p {
+            font-size: 13.5px;
+            opacity: .75;
+            line-height: 1.7;
+        }
+
+        .panel-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .35);
+        }
+
+        .dot.active {
+            background: #fff;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* ── right panel ── */
+        .panel-right {
+            flex: 1;
+            background: var(--card);
+            padding: 52px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-head {
+            margin-bottom: 32px;
+        }
+
+        .form-head h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .form-head p {
+            font-size: 13.5px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── form fields ── */
+        .field {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14.5px;
+            color: var(--text);
+            background: #FAFBFD;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .field input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3.5px rgba(108, 142, 191, .14);
+        }
+
+        .field input.has-icon {
+            padding-right: 46px;
+        }
+
+        .toggle-pw {
+            position: absolute;
+            right: 14px;
+            top: 38px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 18px;
+            transition: color .2s;
+            line-height: 1;
+        }
+
+        .toggle-pw:hover {
+            color: var(--primary);
+        }
+
+        /* ── options row ── */
+        .options-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .check-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .check-label input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 15px;
+            height: 15px;
+        }
+
+        .btn-link-sm {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            transition: color .15s;
+        }
+
+        .btn-link-sm:hover {
+            color: var(--primary-dk);
+        }
+
+        /* ── primary button ── */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4A6FA5, #6C8EBF);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: .3px;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+            box-shadow: 0 4px 16px rgba(74, 111, 165, .35);
+            margin-bottom: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(74, 111, 165, .42);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .divider span {
+            font-size: 12px;
+            color: var(--border);
+            white-space: nowrap;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .btn-daftar {
+            width: 100%;
+            padding: 13px;
+            background: var(--primary-lt);
+            color: var(--primary-dk);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+        }
+
+        .btn-daftar:hover {
+            background: #dce9f6;
+            border-color: var(--primary);
+        }
+
+        /* ── modal overlay ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 49, 66, .35);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 36px;
+            width: min(420px, 90vw);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .12);
+            transform: translateY(16px) scale(.97);
+            transition: transform .3s cubic-bezier(.22, .68, 0, 1.2);
+            position: relative;
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: none;
+        }
+
+        .modal-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+
+        .modal-icon.blue {
+            background: var(--primary-lt);
+        }
+
+        .modal-icon.peach {
+            background: var(--accent-lt);
+        }
+
+        .modal-box h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .modal-box p {
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 20px;
+        }
+
+        .modal-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .modal-field input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: #FAFBFD;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            margin-bottom: 14px;
+        }
+
+        .modal-field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 142, 191, .13);
+            background: #fff;
+        }
+
+        .btn-modal {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #4A6FA5, #6C8EBF);
+            color: #fff;
+            border: none;
+            border-radius: 11px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14.5px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+            box-shadow: 0 4px 14px rgba(74, 111, 165, .3);
+        }
+
+        .btn-modal:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(74, 111, 165, .38);
+        }
+
+        .btn-modal.peach {
+            background: linear-gradient(135deg, #E07B39, #F4A261);
+            box-shadow: 0 4px 14px rgba(244, 162, 97, .35);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--bg);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 18px;
+            transition: background .15s;
+        }
+
+        .close-modal:hover {
+            background: var(--border);
+        }
+
+        /* success state */
+        .success-msg {
+            display: none;
+            text-align: center;
+            padding: 10px 0 4px;
+        }
+
+        .success-msg .check {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .success-msg h4 {
+            font-weight: 800;
+            color: var(--success);
+            font-size: 17px;
+        }
+
+        .success-msg p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 640px) {
+            .panel-left {
+                display: none;
+            }
+
+            .panel-right {
+                padding: 40px 28px;
+            }
+
+            .page {
+                min-height: unset;
+                border-radius: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="page">
+
+        <!-- Left decorative panel -->
+        <div class="panel-left">
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="assets/logo.png" alt="Logo SITTA">
+                </div>
+                <div>
+                    <div class="brand-name">SITTA</div>
+                    <div class="brand-sub">Sistem Akademik</div>
+                </div>
+            </div>
+
+            <div class="panel-tagline">
+                <h1>Kelola akademik dengan mudah & nyaman</h1>
+                <p>Akses jadwal, nilai, dan informasi kampus kapan saja dalam satu platform terpadu.</p>
+            </div>
+
+            <div class="panel-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <!-- Right form panel -->
+        <div class="panel-right">
+            <div class="form-head">
+                <h2>Selamat datang kembali 👋</h2>
+                <p>Masuk ke akun SITTA kamu</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="nama@kampus.ac.id" autocomplete="email"
+                        required>
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan password"
+                        autocomplete="current-password" class="has-icon" required>
+                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Tampilkan password">👁</button>
+                </div>
+
+                <div class="options-row">
+                    <label class="check-label">
+                        <input type="checkbox" id="remember">
+                        Ingat saya
+                    </label>
+                    <button type="button" class="btn-link-sm" id="btnLupa">Lupa password?</button>
+                </div>
+
+                <button type="submit" class="btn-primary">Masuk ke SITTA</button>
+            </form>
+
+            <div class="divider"><span>atau</span></div>
+            <button class="btn-daftar" id="btnDaftar">Belum punya akun? Daftar sekarang</button>
+        </div>
+    </div>
+
+    <!-- Modal: Lupa Password -->
+    <div class="modal-overlay" id="modalLupa">
+        <div class="modal-box">
+            <button class="close-modal" data-close="modalLupa">✕</button>
+            <div class="modal-icon blue">🔑</div>
+            <h3>Lupa Password?</h3>
+            <p>Masukkan email kampus kamu dan kami akan mengirimkan link untuk reset password.</p>
+            <div class="modal-field">
+                <label>Email</label>
+                <input type="email" id="emailReset" placeholder="nama@kampus.ac.id">
+            </div>
+            <button class="btn-modal" id="btnKirimReset">Kirim Link Reset</button>
+            <div class="success-msg" id="successReset">
+                <div class="check">✅</div>
+                <h4>Email terkirim!</h4>
+                <p>Cek inbox atau folder spam kamu.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Daftar -->
+    <div class="modal-overlay" id="modalDaftar">
+        <div class="modal-box">
+            <button class="close-modal" data-close="modalDaftar">✕</button>
+            <div class="modal-icon peach">✨</div>
+            <h3>Buat Akun Baru</h3>
+            <p>Daftarkan diri menggunakan email kampus resmi kamu.</p>
+            <div class="modal-field">
+                <label>Nama Lengkap</label>
+                <input type="text" placeholder="Nama sesuai KTM">
+                <label>Email Kampus</label>
+                <input type="email" placeholder="nim@kampus.ac.id">
+                <label>NIM</label>
+                <input type="text" placeholder="Nomor Induk Mahasiswa">
+            </div>
+            <button class="btn-modal peach" id="btnDaftarSubmit">Daftar Sekarang</button>
+            <div class="success-msg" id="successDaftar">
+                <div class="check">🎉</div>
+                <h4>Pendaftaran terkirim!</h4>
+                <p>Akun kamu akan diverifikasi oleh admin kampus.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const pwInput = document.getElementById('password');
+        const togglePw = document.getElementById('togglePw');
+        togglePw.addEventListener('click', () => {
+            const show = pwInput.type === 'password';
+            pwInput.type = show ? 'text' : 'password';
+            togglePw.textContent = show ? '🙈' : '👁';
+        });
+
+        // Open modals
+        document.getElementById('btnLupa').addEventListener('click', () => openModal('modalLupa'));
+        document.getElementById('btnDaftar').addEventListener('click', () => openModal('modalDaftar'));
+
+        // Close buttons
+        document.querySelectorAll('[data-close]').forEach(btn => {
+            btn.addEventListener('click', () => closeModal(btn.dataset.close));
+        });
+
+        // Close on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) closeModal(overlay.id);
+            });
+        });
+
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+            // reset success states
+            document.querySelectorAll('.success-msg').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.btn-modal').forEach(el => el.style.display = 'block');
+        }
+
+        // Kirim reset
+        document.getElementById('btnKirimReset').addEventListener('click', () => {
+            const email = document.getElementById('emailReset').value.trim();
+            if (!email) { document.getElementById('emailReset').focus(); return; }
+            document.getElementById('btnKirimReset').style.display = 'none';
+            document.getElementById('successReset').style.display = 'block';
+        });
+
+        // Daftar submit
+        document.getElementById('btnDaftarSubmit').addEventListener('click', () => {
+            document.getElementById('btnDaftarSubmit').style.display = 'none';
+            document.getElementById('successDaftar').style.display = 'block';
+        });
+
+        // Login form submit
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = e.target.querySelector('.btn-primary');
+            btn.textContent = 'Memproses...';
+            btn.disabled = true;
+            setTimeout(() => { btn.textContent = 'Masuk ke SITTA'; btn.disabled = false; }, 1500);
+        });
+    </script>
+</body>
+
+</html>
