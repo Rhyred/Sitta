@@ -4,38 +4,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SITTA - Stok Bahan Ajar</title>
+    <title>SITTA — Bahan Ajar</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+
     <header>
         <nav class="navbar">
-            <div class="nav-brand">Aplikasi SITTA</div>
+            <a href="dashboard.html" class="nav-brand">
+                <div class="nav-brand-logo">
+                    <img src="assets/logo.png" alt="Logo SITTA">
+                </div>
+                <div>
+                    <div class="nav-brand-text">SITTA</div>
+                    <div class="nav-brand-sub">Sistem Akademik</div>
+                </div>
+            </a>
             <ul class="nav-links">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="stok.html" class="active">Informasi Bahan Ajar</a></li>
-                <li><a href="tracking.html">Tracking Pengiriman</a></li>
+                <li><a href="dashboard.html">🏠 Dashboard</a></li>
+                <li><a href="stok.html" class="active">📦 Bahan Ajar</a></li>
+                <li><a href="tracking.html">🚚 Tracking</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">📊 Laporan ▾</a>
+                    <div class="dropdown-content">
+                        <a href="monitoring.html">📈 Monitoring Progress DO</a>
+                        <a href="rekap.html">📋 Rekap Bahan Ajar</a>
+                        <a href="histori.html">🕒 Histori Transaksi</a>
+                    </div>
+                </li>
             </ul>
+            <div class="nav-user">
+                <div class="nav-avatar">MU</div>
+                <div class="nav-user-info">
+                    <span class="nav-user-name">Mahasiswa UT</span>
+                    <span class="nav-user-role">Mahasiswa Aktif</span>
+                </div>
+            </div>
         </nav>
     </header>
-    <main class="stok-container">
-        <h2>Peragaan Data Bahan Ajar</h2>
 
-        <div class="add-stok-form">
-            <input type="text" id="inputKode" placeholder="Kode Barang">
-            <input type="text" id="inputNama" placeholder="Nama Barang">
-            <input type="number" id="inputStok" placeholder="Jumlah Stok">
-            <button id="btnTambahStok" class="btn-primary">Tambah Stok</button>
+    <main>
+        <div class="page-header">
+            <h1>Informasi Bahan Ajar</h1>
+            <p>Kelola dan pantau stok bahan ajar Universitas Terbuka</p>
         </div>
 
-        <div id="stokList" class="stok-grid">
-            <!-- Data dirender melalui JS -->
+        <!-- Alert area -->
+        <div id="alertArea"></div>
+
+        <!-- Stats mini -->
+        <div class="stats-grid" style="margin-bottom:24px;">
+            <div class="stat-card">
+                <div class="stat-icon blue">📚</div>
+                <div>
+                    <div class="stat-value" id="statJumlah">0</div>
+                    <div class="stat-label">Jenis Bahan Ajar</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon peach">📦</div>
+                <div>
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Total Stok</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+                <div>
+                    <div class="stat-value" id="statAman">0</div>
+                    <div class="stat-label">Stok Aman (≥100)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <!-- Toolbar -->
+            <div class="section-header">
+                <h2>Daftar Bahan Ajar</h2>
+                <button class="btn-primary" id="btnTambah">+ Tambah Bahan Ajar</button>
+            </div>
+
+            <!-- Search -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍  Cari nama atau kode bahan ajar...">
+                <select id="filterJenis"
+                    style="padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:#fff;outline:none;cursor:pointer;">
+                    <option value="">Semua Jenis</option>
+                    <option value="BMP">BMP</option>
+                    <option value="Modul">Modul</option>
+                    <option value="Baru">Baru</option>
+                </select>
+            </div>
+
+            <!-- Cards -->
+            <div id="stokList" class="stok-grid">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Empty state -->
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-icon">📭</div>
+                <h3>Tidak ada data ditemukan</h3>
+                <p>Coba ubah kata kunci pencarian atau filter yang digunakan</p>
+            </div>
         </div>
     </main>
 
+    <!-- Modal Tambah Stok -->
+    <div class="modal-overlay" id="modalTambah">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Tambah Bahan Ajar</h3>
+                <button class="close-modal" data-close="modalTambah">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label for="inputKode">Kode</label>
+                <input type="text" id="inputKode" placeholder="Contoh: MKDU4110">
+            </div>
+            <div class="form-group">
+                <label for="inputNama">Nama Bahan Ajar</label>
+                <input type="text" id="inputNama" placeholder="Nama lengkap bahan ajar">
+            </div>
+            <div class="form-group">
+                <label for="inputJenis">Jenis</label>
+                <select id="inputJenis">
+                    <option value="BMP">BMP</option>
+                    <option value="Modul">Modul</option>
+                    <option value="Baru">Baru</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="inputEdisi">Edisi</label>
+                <input type="number" id="inputEdisi" placeholder="Nomor edisi" min="1">
+            </div>
+            <div class="form-group">
+                <label for="inputStok">Jumlah Stok</label>
+                <input type="number" id="inputStok" placeholder="Jumlah stok tersedia" min="0">
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:8px;">
+                <button class="btn-secondary" style="flex:1;" data-close="modalTambah">Batal</button>
+                <button class="btn-primary" style="flex:2;" id="btnSimpan">Simpan Data</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/data.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/scripts.js"></script>
+    <script>
+        // ── Render stok cards ──
+        function renderStok(data) {
+            const list = document.getElementById('stokList');
+            const empty = document.getElementById('emptyState');
+            list.innerHTML = '';
+
+            if (data.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            data.forEach((item, idx) => {
+                const badgeClass = item.jenis === 'BMP' ? 'badge-bmp' : item.jenis === 'Modul' ? 'badge-modul' : 'badge-baru';
+                const stokColor = item.stok >= 100 ? 'var(--primary-dk)' : item.stok >= 50 ? '#C0651A' : 'var(--danger)';
+                const card = document.createElement('div');
+                card.className = 'stok-card';
+                card.innerHTML = `
+          <div class="stok-card-header">
+            <div>
+              <h4>${item.nama}</h4>
+              <div class="stok-kode">${item.kode}</div>
+            </div>
+            <span class="stok-badge ${badgeClass}">${item.jenis}</span>
+          </div>
+          <div class="stok-meta">
+            <div class="stok-meta-item">
+              <span class="meta-label">Edisi</span>
+              <span class="meta-value">${item.edisi}</span>
+            </div>
+          </div>
+          <div class="stok-count">
+            <div>
+              <div class="count-num" style="color:${stokColor};">${item.stok.toLocaleString('id-ID')}</div>
+              <div class="count-label">unit tersedia</div>
+            </div>
+            <button onclick="hapusStok(${idx})" class="btn-danger" style="padding:7px 14px;font-size:12px;">Hapus</button>
+          </div>
+        `;
+                list.appendChild(card);
+            });
+
+            // Update stats
+            document.getElementById('statJumlah').textContent = dataBahanAjar.length;
+            document.getElementById('statTotal').textContent = dataBahanAjar.reduce((s, i) => s + i.stok, 0).toLocaleString('id-ID');
+            document.getElementById('statAman').textContent = dataBahanAjar.filter(i => i.stok >= 100).length;
+        }
+
+        function showAlert(msg, type = 'success') {
+            const area = document.getElementById('alertArea');
+            area.innerHTML = `<div class="alert alert-${type}">${type === 'success' ? '✅' : '❌'} ${msg}</div>`;
+            setTimeout(() => area.innerHTML = '', 3000);
+        }
+
+        function hapusStok(idx) {
+            if (confirm(`Hapus "${dataBahanAjar[idx].nama}"?`)) {
+                dataBahanAjar.splice(idx, 1);
+                renderStok(getFiltered());
+                showAlert('Data berhasil dihapus.', 'danger');
+            }
+        }
+
+        function getFiltered() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const j = document.getElementById('filterJenis').value;
+            return dataBahanAjar.filter(item =>
+                (item.nama.toLowerCase().includes(q) || item.kode.toLowerCase().includes(q)) &&
+                (!j || item.jenis === j)
+            );
+        }
+
+        // Search & filter live
+        document.getElementById('searchInput').addEventListener('input', () => renderStok(getFiltered()));
+        document.getElementById('filterJenis').addEventListener('change', () => renderStok(getFiltered()));
+
+        // Modal
+        document.getElementById('btnTambah').addEventListener('click', () => openModal('modalTambah'));
+        document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.close)));
+        document.getElementById('modalTambah').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('modalTambah'); });
+
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+        // Simpan
+        document.getElementById('btnSimpan').addEventListener('click', () => {
+            const kode = document.getElementById('inputKode').value.trim();
+            const nama = document.getElementById('inputNama').value.trim();
+            const jenis = document.getElementById('inputJenis').value;
+            const edisi = document.getElementById('inputEdisi').value;
+            const stok = parseInt(document.getElementById('inputStok').value);
+
+            if (!kode || !nama || !edisi || isNaN(stok) || stok < 0) {
+                showAlert('Semua field harus diisi dengan benar!', 'danger');
+                return;
+            }
+
+            dataBahanAjar.push({ kode, nama, jenis, edisi: parseInt(edisi), stok });
+            renderStok(getFiltered());
+            closeModal('modalTambah');
+            showAlert(`Bahan ajar "${nama}" berhasil ditambahkan!`);
+
+            // Reset form
+            ['inputKode', 'inputNama', 'inputEdisi', 'inputStok'].forEach(id => document.getElementById(id).value = '');
+        });
+
+        // Initial render
+        renderStok(dataBahanAjar);
+    </script>
 </body>
 
 </html>

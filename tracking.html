@@ -4,45 +4,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SITTA - Tracking</title>
+    <title>SITTA — Tracking Pengiriman</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+
     <header>
         <nav class="navbar">
-            <div class="nav-brand">Aplikasi SITTA</div>
+            <a href="dashboard.html" class="nav-brand">
+                <div class="nav-brand-logo">
+                    <img src="assets/logo.png" alt="Logo SITTA">
+                </div>
+                <div>
+                    <div class="nav-brand-text">SITTA</div>
+                    <div class="nav-brand-sub">Sistem Akademik</div>
+                </div>
+            </a>
             <ul class="nav-links">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="stok.html">Informasi Bahan Ajar</a></li>
-                <li><a href="tracking.html" class="active">Tracking Pengiriman</a></li>
+                <li><a href="dashboard.html">🏠 Dashboard</a></li>
+                <li><a href="stok.html">📦 Bahan Ajar</a></li>
+                <li><a href="tracking.html" class="active">🚚 Tracking</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">📊 Laporan ▾</a>
+                    <div class="dropdown-content">
+                        <a href="monitoring.html">📈 Monitoring Progress DO</a>
+                        <a href="rekap.html">📋 Rekap Bahan Ajar</a>
+                        <a href="histori.html">🕒 Histori Transaksi</a>
+                    </div>
+                </li>
             </ul>
+            <div class="nav-user">
+                <div class="nav-avatar">MU</div>
+                <div class="nav-user-info">
+                    <span class="nav-user-name">Mahasiswa UT</span>
+                    <span class="nav-user-role">Mahasiswa Aktif</span>
+                </div>
+            </div>
         </nav>
     </header>
-    <main class="tracking-container">
-        <div class="search-box">
-            <label for="noDO">No. DO/Billing</label>
-            <input type="text" id="noDO" placeholder="Masukkan Nomor DO">
-            <button id="btnCariDO" class="btn-warning">Cari</button>
+
+    <main>
+        <div class="page-header">
+            <h1>Tracking Pengiriman</h1>
+            <p>Lacak status pengiriman bahan ajar berdasarkan nomor DO atau Billing</p>
         </div>
 
-        <section id="trackingResult" class="hidden">
-            <div class="tracking-header">
-                <h3>ROIKA HEPRIDA SITIO</h3>
-                <p>18503964874</p>
+        <!-- Search card -->
+        <div class="tracking-search">
+            <h2>Cari Pengiriman</h2>
+            <p>Masukkan nomor DO atau nomor Billing untuk melihat status pengiriman kamu</p>
+            <div class="search-input-group">
+                <input type="text" id="noDO" placeholder="Contoh: 18503964874 atau DO-2025-001">
+                <button class="btn-warning" id="btnCariDO">🔍 Lacak Sekarang</button>
+                <button class="btn-secondary" id="btnReset" style="display:none;">✕ Reset</button>
             </div>
-            <div class="tracking-body">
-                <h4>Perjalanan Paket</h4>
-                <ul class="progress-list">
-                    <li>Paket dikirim dari pusat (2025-03-20)</li>
-                    <li>Tiba di HUB Sumatera (2025-03-22)</li>
-                    <li>Dalam proses pengantaran kurir (2025-03-24)</li>
-                </ul>
+            <div id="alertTracking" style="margin-top:14px;"></div>
+        </div>
+
+        <!-- Result -->
+        <div id="trackingResult" class="tracking-result hidden">
+
+            <!-- Header -->
+            <div class="tracking-result-header">
+                <div>
+                    <h3 id="resultNama">—</h3>
+                    <div class="do-number">No. DO: <span id="resultDO">—</span></div>
+                    <div style="font-size:12.5px;opacity:.7;margin-top:4px;">
+                        Tujuan: <span id="resultTujuan">—</span>
+                    </div>
+                </div>
+                <div class="tracking-status-badge" id="resultStatus">Dalam Pengiriman</div>
             </div>
-        </section>
+
+            <!-- Info row -->
+            <div style="display:flex;gap:0;border-bottom:1px solid var(--border);">
+                <div style="flex:1;padding:18px 24px;border-right:1px solid var(--border);">
+                    <div
+                        style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;">
+                        Tanggal Kirim</div>
+                    <div style="font-size:15px;font-weight:700;color:var(--text);" id="resultTglKirim">—</div>
+                </div>
+                <div style="flex:1;padding:18px 24px;border-right:1px solid var(--border);">
+                    <div
+                        style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;">
+                        Estimasi Tiba</div>
+                    <div style="font-size:15px;font-weight:700;color:var(--text);" id="resultETA">—</div>
+                </div>
+                <div style="flex:1;padding:18px 24px;">
+                    <div
+                        style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;">
+                        Kurir</div>
+                    <div style="font-size:15px;font-weight:700;color:var(--text);" id="resultKurir">—</div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="tracking-timeline">
+                <div class="timeline-title">Perjalanan Paket</div>
+                <div class="timeline" id="timelineContainer">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Contoh nomor DO -->
+        <div class="card" style="margin-top:20px;">
+            <div class="section-header" style="margin-bottom:14px;">
+                <h2>Nomor DO Contoh</h2>
+                <span style="font-size:12px;color:var(--muted);">Klik untuk mencoba</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;" id="sampleDOs">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
+
     </main>
 
-    <script src="js/script.js"></script>
+    <script src="js/scripts.js"></script>
+    <script>
+        // Data dummy pengiriman
+        const dataDO = {
+            '18503964874': {
+                nama: 'Roika Heprida Sitio',
+                tujuan: 'Medan, Sumatera Utara',
+                tglKirim: '20 Maret 2025',
+                eta: '25 Maret 2025',
+                kurir: 'JNE Reguler',
+                status: '🚚 Dalam Pengiriman',
+                timeline: [
+                    { step: 'Pesanan dikonfirmasi', time: '20 Mar 2025, 08.00 WIB', desc: 'Pesanan bahan ajar berhasil dikonfirmasi oleh pusat distribusi.', state: 'done' },
+                    { step: 'Paket disiapkan di gudang', time: '20 Mar 2025, 13.30 WIB', desc: 'Bahan ajar sedang dikemas dan disiapkan untuk pengiriman.', state: 'done' },
+                    { step: 'Dikirim dari pusat distribusi', time: '20 Mar 2025, 17.00 WIB', desc: 'Paket telah diserahkan kepada mitra kurir JNE.', state: 'done' },
+                    { step: 'Tiba di HUB Sumatera', time: '22 Mar 2025, 09.15 WIB', desc: 'Paket tiba di gudang HUB regional Sumatera, Medan.', state: 'done' },
+                    { step: 'Dalam proses pengantaran', time: '24 Mar 2025, 07.00 WIB', desc: 'Paket sedang dibawa oleh kurir untuk diantarkan ke alamat tujuan.', state: 'active' },
+                    { step: 'Diterima penerima', time: 'Estimasi 25 Mar 2025', desc: '', state: 'pending' },
+                ]
+            },
+            'DO-2025-001': {
+                nama: 'Budi Santoso',
+                tujuan: 'Surabaya, Jawa Timur',
+                tglKirim: '15 April 2025',
+                eta: '19 April 2025',
+                kurir: 'SiCepat Express',
+                status: '✅ Terkirim',
+                timeline: [
+                    { step: 'Pesanan dikonfirmasi', time: '15 Apr 2025, 09.00 WIB', desc: 'Pesanan berhasil dikonfirmasi.', state: 'done' },
+                    { step: 'Paket disiapkan di gudang', time: '15 Apr 2025, 14.00 WIB', desc: 'Bahan ajar dikemas dengan aman.', state: 'done' },
+                    { step: 'Dikirim dari pusat distribusi', time: '16 Apr 2025, 08.00 WIB', desc: 'Paket diserahkan ke kurir SiCepat.', state: 'done' },
+                    { step: 'Tiba di HUB Jawa Timur', time: '17 Apr 2025, 11.00 WIB', desc: 'Paket tiba di HUB Surabaya.', state: 'done' },
+                    { step: 'Dalam proses pengantaran', time: '18 Apr 2025, 08.30 WIB', desc: 'Kurir mengantar paket ke alamat tujuan.', state: 'done' },
+                    { step: 'Diterima penerima', time: '18 Apr 2025, 14.22 WIB', desc: 'Paket diterima langsung oleh Budi Santoso.', state: 'done' },
+                ]
+            }
+        };
+
+        // Render sample buttons
+        const sampleContainer = document.getElementById('sampleDOs');
+        Object.keys(dataDO).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-secondary';
+            btn.style.fontSize = '13px';
+            btn.textContent = key;
+            btn.addEventListener('click', () => {
+                document.getElementById('noDO').value = key;
+                cariDO(key);
+            });
+            sampleContainer.appendChild(btn);
+        });
+
+        function cariDO(noDO) {
+            const alertEl = document.getElementById('alertTracking');
+            const result = document.getElementById('trackingResult');
+            const resetBtn = document.getElementById('btnReset');
+
+            const data = dataDO[noDO.trim()];
+
+            if (!data) {
+                alertEl.innerHTML = `<div class="alert alert-danger">❌ Nomor DO "<strong>${noDO}</strong>" tidak ditemukan. Coba nomor contoh di bawah.</div>`;
+                result.classList.add('hidden');
+                return;
+            }
+
+            alertEl.innerHTML = '';
+            resetBtn.style.display = 'inline-flex';
+
+            // Populate header
+            document.getElementById('resultNama').textContent = data.nama;
+            document.getElementById('resultDO').textContent = noDO;
+            document.getElementById('resultTujuan').textContent = data.tujuan;
+            document.getElementById('resultStatus').textContent = data.status;
+            document.getElementById('resultTglKirim').textContent = data.tglKirim;
+            document.getElementById('resultETA').textContent = data.eta;
+            document.getElementById('resultKurir').textContent = data.kurir;
+
+            // Render timeline
+            const tl = document.getElementById('timelineContainer');
+            tl.innerHTML = '';
+            data.timeline.forEach(item => {
+                const li = document.createElement('div');
+                li.className = 'timeline-item';
+                const dotClass = item.state === 'done' ? 'done' : item.state === 'active' ? 'active' : '';
+                const dotInner = item.state === 'done' ? '✓' : '';
+                li.innerHTML = `
+          <div class="timeline-dot ${dotClass}" style="${item.state === 'done' ? 'color:#fff;font-size:10px;font-weight:800;' : ''}">
+            ${item.state === 'done' ? dotInner : item.state === 'active' ? '<div class="dot-inner"></div>' : ''}
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-step" style="${item.state === 'pending' ? 'opacity:.45;' : ''}">${item.step}</div>
+            <div class="timeline-time" style="${item.state === 'pending' ? 'opacity:.4;' : ''}">${item.time}</div>
+            ${item.desc ? `<div class="timeline-desc" style="${item.state === 'pending' ? 'opacity:.4;' : ''}">${item.desc}</div>` : ''}
+          </div>
+        `;
+                tl.appendChild(li);
+            });
+
+            result.classList.remove('hidden');
+            result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        document.getElementById('btnCariDO').addEventListener('click', () => {
+            const val = document.getElementById('noDO').value.trim();
+            if (!val) {
+                document.getElementById('alertTracking').innerHTML = '<div class="alert alert-danger">❌ Masukkan nomor DO terlebih dahulu!</div>';
+                return;
+            }
+            cariDO(val);
+        });
+
+        document.getElementById('noDO').addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('btnCariDO').click();
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+            document.getElementById('noDO').value = '';
+            document.getElementById('trackingResult').classList.add('hidden');
+            document.getElementById('alertTracking').innerHTML = '';
+            document.getElementById('btnReset').style.display = 'none';
+        });
+    </script>
 </body>
 
 </html>

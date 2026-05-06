@@ -699,11 +699,11 @@
             <p>Daftarkan diri menggunakan email kampus resmi kamu.</p>
             <div class="modal-field">
                 <label>Nama Lengkap</label>
-                <input type="text" placeholder="Nama sesuai KTM">
+                <input type="text" id="registerName" placeholder="Nama sesuai KTM">
                 <label>Email Kampus</label>
-                <input type="email" placeholder="nim@kampus.ac.id">
+                <input type="email" id="registerEmail" placeholder="nim@kampus.ac.id">
                 <label>NIM</label>
-                <input type="text" placeholder="Nomor Induk Mahasiswa">
+                <input type="text" id="registerNIM" placeholder="Nomor Induk Mahasiswa">
             </div>
             <button class="btn-modal peach" id="btnDaftarSubmit">Daftar Sekarang</button>
             <div class="success-msg" id="successDaftar">
@@ -714,6 +714,10 @@
         </div>
     </div>
 
+    <script>
+        // load shared app script (login/register/navbar)
+    </script>
+    <script src="js/scripts.js"></script>
     <script>
         // Toggle password visibility
         const pwInput = document.getElementById('password');
@@ -755,21 +759,7 @@
             document.getElementById('btnKirimReset').style.display = 'none';
             document.getElementById('successReset').style.display = 'block';
         });
-
-        // Daftar submit
-        document.getElementById('btnDaftarSubmit').addEventListener('click', () => {
-            document.getElementById('btnDaftarSubmit').style.display = 'none';
-            document.getElementById('successDaftar').style.display = 'block';
-        });
-
-        // Login form submit
-        document.getElementById('loginForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const btn = e.target.querySelector('.btn-primary');
-            btn.textContent = 'Memproses...';
-            btn.disabled = true;
-            setTimeout(() => { btn.textContent = 'Masuk ke SITTA'; btn.disabled = false; }, 1500);
-        });
+        // note: login/register handling is in js/scripts.js
     </script>
 </body>
 

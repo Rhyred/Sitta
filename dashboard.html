@@ -4,35 +4,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SITTA - Dashboard</title>
+    <title>SITTA — Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+
     <header>
         <nav class="navbar">
-            <div class="nav-brand">Aplikasi SITTA</div>
+            <a href="dashboard.html" class="nav-brand">
+                <div class="nav-brand-logo">
+                    <img src="assets/logo.png" alt="Logo SITTA">
+                </div>
+                <div>
+                    <div class="nav-brand-text">SITTA</div>
+                    <div class="nav-brand-sub">Sistem Akademik</div>
+                </div>
+            </a>
+
             <ul class="nav-links">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="stok.html">Informasi Bahan Ajar</a></li>
-                <li><a href="tracking.html">Tracking Pengiriman</a></li>
+                <li><a href="dashboard.html" class="active">🏠 Dashboard</a></li>
+                <li><a href="stok.html">📦 Bahan Ajar</a></li>
+                <li><a href="tracking.html">🚚 Tracking</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropbtn">Laporan ▾</a>
+                    <a href="#" class="dropbtn">📊 Laporan ▾</a>
                     <div class="dropdown-content">
-                        <a href="#">Monitoring Progress DO</a>
-                        <a href="#">Rekap Bahan Ajar</a>
-                        <a href="#">Histori Transaksi</a>
+                        <a href="monitoring.html">📈 Monitoring Progress DO</a>
+                        <a href="rekap.html">📋 Rekap Bahan Ajar</a>
+                        <a href="histori.html">🕒 Histori Transaksi</a>
                     </div>
                 </li>
             </ul>
+
+            <div class="nav-user">
+                <div class="nav-avatar" id="userInitial">MU</div>
+                <div class="nav-user-info">
+                    <span class="nav-user-name" id="userName">Mahasiswa UT</span>
+                    <span class="nav-user-role">Mahasiswa Aktif</span>
+                </div>
+            </div>
         </nav>
     </header>
-    <main class="dashboard-content">
-        <h1 id="greetingText">Selamat datang</h1>
-        <p>Silakan pilih menu navigasi di atas untuk mengelola bahan ajar Universitas Terbuka.</p>
+
+    <main>
+        <!-- Greeting Banner -->
+        <div class="greeting-banner">
+            <div class="greeting-text">
+                <h2 id="greetingText">Selamat datang!</h2>
+                <p>Kelola kebutuhan akademik Anda dengan mudah melalui platform SITTA.</p>
+            </div>
+            <div class="greeting-badge">
+                <div class="time" id="liveClock">--:--</div>
+                <div class="date" id="liveDate">-- --- ----</div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📚</div>
+                <div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Jenis Bahan Ajar</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon peach">📦</div>
+                <div>
+                    <div class="stat-value" id="totalStok">—</div>
+                    <div class="stat-label">Total Stok Tersedia</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">🚚</div>
+                <div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Pengiriman Aktif</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">📝</div>
+                <div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Transaksi Bulan Ini</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="section-header">
+                <h2>Akses Cepat</h2>
+            </div>
+            <div class="quick-grid">
+                <a href="stok.html" class="quick-card">
+                    <div class="qc-icon">📦</div>
+                    <div class="qc-title">Informasi Bahan Ajar</div>
+                    <div class="qc-desc">Cek stok dan tambah data bahan ajar</div>
+                </a>
+                <a href="tracking.html" class="quick-card">
+                    <div class="qc-icon">🚚</div>
+                    <div class="qc-title">Tracking Pengiriman</div>
+                    <div class="qc-desc">Lacak status DO dan paket kamu</div>
+                </a>
+                <a href="#" class="quick-card">
+                    <div class="qc-icon">📈</div>
+                    <div class="qc-title">Monitoring Progress</div>
+                    <div class="qc-desc">Pantau progress DO aktif</div>
+                </a>
+                <a href="#" class="quick-card">
+                    <div class="qc-icon">📋</div>
+                    <div class="qc-title">Rekap Bahan Ajar</div>
+                    <div class="qc-desc">Lihat laporan rekap bulanan</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+            <div class="section-header">
+                <h2>Aktivitas Terkini</h2>
+                <span style="font-size:12px; color:var(--muted);">Update real-time</span>
+            </div>
+            <div id="recentActivity">
+                <!-- Rendered by JS -->
+            </div>
+        </div>
     </main>
 
-    <script src="js/script.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/scripts.js"></script>
+    <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('liveClock').textContent =
+                now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('liveDate').textContent =
+                now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Greeting
+        const hour = new Date().getHours();
+        let ucapan = 'Selamat Malam';
+        if (hour >= 4 && hour < 11) ucapan = 'Selamat Pagi';
+        else if (hour >= 11 && hour < 15) ucapan = 'Selamat Siang';
+        else if (hour >= 15 && hour < 18) ucapan = 'Selamat Sore';
+        document.getElementById('greetingText').textContent = `${ucapan}, Mahasiswa UT! 👋`;
+
+        // Total stok from data
+        if (typeof dataBahanAjar !== 'undefined') {
+            const total = dataBahanAjar.reduce((sum, item) => sum + item.stok, 0);
+            document.getElementById('totalStok').textContent = total.toLocaleString('id-ID');
+        }
+
+        // Recent activity mock
+        const activities = [
+            { icon: '📦', text: 'Stok ASIP4301 diperbarui', time: '2 jam lalu', color: 'blue' },
+            { icon: '🚚', text: 'Pengiriman DO #18503964874 dalam proses', time: '5 jam lalu', color: 'peach' },
+            { icon: '✅', text: 'Rekap Bahan Ajar Maret berhasil digenerate', time: 'Kemarin', color: 'green' },
+            { icon: '📝', text: 'Transaksi baru MKDU4110 tercatat', time: '2 hari lalu', color: 'purple' },
+        ];
+
+        const container = document.getElementById('recentActivity');
+        activities.forEach((a, i) => {
+            const div = document.createElement('div');
+            div.style.cssText = `display:flex;align-items:center;gap:14px;padding:12px 0;${i < activities.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}`;
+            div.innerHTML = `
+        <div class="stat-icon ${a.color}" style="width:38px;height:38px;border-radius:10px;font-size:18px;flex-shrink:0;">${a.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);">${a.text}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${a.time}</div>
+        </div>
+      `;
+            container.appendChild(div);
+        });
+    </script>
 </body>
 
 </html>

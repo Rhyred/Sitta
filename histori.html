@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA — Histori Transaksi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .tx-table th {
+            text-align: left;
+            padding: 11px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--muted);
+            border-bottom: 1.5px solid var(--border);
+            background: #FAFBFD;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tx-table th:hover {
+            color: var(--primary-dk);
+        }
+
+        .tx-table td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        .tx-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tx-table tbody tr {
+            transition: background .15s;
+            cursor: pointer;
+        }
+
+        .tx-table tbody tr:hover {
+            background: var(--primary-lt);
+        }
+
+        .tx-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 11px;
+            border-radius: 99px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .type-masuk {
+            background: #E8F5EC;
+            color: #2E7D32;
+        }
+
+        .type-keluar {
+            background: #FEF2F2;
+            color: var(--danger);
+        }
+
+        .type-pindah {
+            background: var(--primary-lt);
+            color: var(--primary-dk);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            padding: 9px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: 'Nunito', sans-serif;
+            font-size: 13.5px;
+            color: var(--text);
+            background: #fff;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .filter-bar input:focus,
+        .filter-bar select:focus {
+            border-color: var(--primary);
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .page-info {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .page-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            padding: 7px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .page-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary-dk);
+        }
+
+        .page-btn.active {
+            background: var(--primary-dk);
+            color: #fff;
+            border-color: var(--primary-dk);
+        }
+
+        .page-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* Detail modal */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13.5px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .detail-val {
+            font-weight: 700;
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="dashboard.html" class="nav-brand">
+                <div class="nav-brand-logo"><img src="assets/logo.png" alt="Logo SITTA"></div>
+                <div>
+                    <div class="nav-brand-text">SITTA</div>
+                    <div class="nav-brand-sub">Sistem Akademik</div>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">🏠 Dashboard</a></li>
+                <li><a href="stok.html">📦 Bahan Ajar</a></li>
+                <li><a href="tracking.html">🚚 Tracking</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn active">📊 Laporan ▾</a>
+                    <div class="dropdown-content">
+                        <a href="monitoring.html">📈 Monitoring Progress DO</a>
+                        <a href="rekap.html">📋 Rekap Bahan Ajar</a>
+                        <a href="histori.html" style="color:var(--primary-dk)!important;font-weight:700;">🕒 Histori
+                            Transaksi</a>
+                    </div>
+                </li>
+            </ul>
+            <div class="nav-user">
+                <div class="nav-avatar">MU</div>
+                <div class="nav-user-info">
+                    <span class="nav-user-name">Mahasiswa UT</span>
+                    <span class="nav-user-role">Mahasiswa Aktif</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header"
+            style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+            <div>
+                <h1>Histori Transaksi</h1>
+                <p>Riwayat lengkap semua transaksi bahan ajar</p>
+            </div>
+            <button class="btn-primary" onclick="alert('Export CSV akan segera tersedia!')">⬇ Export CSV</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📋</div>
+                <div>
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Total Transaksi</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">📥</div>
+                <div>
+                    <div class="stat-value" id="statMasuk">0</div>
+                    <div class="stat-label">Transaksi Masuk</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon peach">📤</div>
+                <div>
+                    <div class="stat-value" id="statKeluar">0</div>
+                    <div class="stat-label">Transaksi Keluar</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">📊</div>
+                <div>
+                    <div class="stat-value" id="statUnit">0</div>
+                    <div class="stat-label">Total Unit Bergerak</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-header">
+                <h2>Daftar Transaksi</h2>
+                <span style="font-size:12px;color:var(--muted);" id="resultCount">— transaksi</span>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-bar">
+                <input type="text" id="searchTx" placeholder="🔍 Cari ID, nama, atau kode..."
+                    style="flex:1;min-width:180px;">
+                <select id="filterTipe">
+                    <option value="">Semua Tipe</option>
+                    <option value="Masuk">Masuk</option>
+                    <option value="Keluar">Keluar</option>
+                    <option value="Pindah">Pindah</option>
+                </select>
+                <select id="filterKode">
+                    <option value="">Semua Kode</option>
+                    <option value="ASIP4301">ASIP4301</option>
+                    <option value="MKDU4110">MKDU4110</option>
+                    <option value="MSIM4101">MSIM4101</option>
+                </select>
+                <input type="date" id="filterTgl" title="Filter tanggal">
+                <button class="btn-secondary" onclick="resetFilter()">↺ Reset</button>
+            </div>
+
+            <!-- Table -->
+            <div style="overflow-x:auto;">
+                <table class="tx-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortBy('id')">ID Transaksi ↕</th>
+                            <th onclick="sortBy('tanggal')">Tanggal ↕</th>
+                            <th>Kode Barang</th>
+                            <th>Nama Bahan Ajar</th>
+                            <th onclick="sortBy('tipe')">Tipe ↕</th>
+                            <th onclick="sortBy('jumlah')">Jumlah ↕</th>
+                            <th>Keterangan</th>
+                            <th>Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txBody"></tbody>
+                </table>
+            </div>
+            <div id="emptyTx" class="empty-state hidden">
+                <div class="empty-icon">📭</div>
+                <h3>Tidak ada transaksi ditemukan</h3>
+                <p>Coba ubah kata kunci atau filter</p>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <div class="page-info" id="pageInfo">— dari — transaksi</div>
+                <div class="page-btns">
+                    <button class="page-btn" id="btnPrev" onclick="changePage(-1)">‹ Prev</button>
+                    <div id="pageNums" style="display:flex;gap:6px;"></div>
+                    <button class="page-btn" id="btnNext" onclick="changePage(1)">Next ›</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="modalDetail">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Detail Transaksi</h3>
+                <button class="close-modal" onclick="closeModal()">✕</button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Generate dummy transactions
+        const txRaw = [
+            { id: 'TRX-001', tanggal: '2025-03-01', kode: 'ASIP4301', nama: 'Pengantar Ilmu Komunikasi', tipe: 'Masuk', jumlah: 100, ket: 'Pengadaan awal semester', petugas: 'Admin Pusat' },
+            { id: 'TRX-002', tanggal: '2025-03-05', kode: 'MKDU4110', nama: 'Bahasa Indonesia', tipe: 'Masuk', jumlah: 200, ket: 'Restock gudang Bandung', petugas: 'Admin Wilayah' },
+            { id: 'TRX-003', tanggal: '2025-03-10', kode: 'ASIP4301', nama: 'Pengantar Ilmu Komunikasi', tipe: 'Keluar', jumlah: 30, ket: 'Pengiriman DO #18503964874', petugas: 'Staf Distribusi' },
+            { id: 'TRX-004', tanggal: '2025-03-15', kode: 'MSIM4101', nama: 'Pengantar Sistem Informasi', tipe: 'Masuk', jumlah: 150, ket: 'Pengadaan modul baru', petugas: 'Admin Pusat' },
+            { id: 'TRX-005', tanggal: '2025-03-20', kode: 'MKDU4110', nama: 'Bahasa Indonesia', tipe: 'Keluar', jumlah: 50, ket: 'Pengiriman DO Surabaya', petugas: 'Staf Distribusi' },
+            { id: 'TRX-006', tanggal: '2025-03-22', kode: 'MSIM4101', nama: 'Pengantar Sistem Informasi', tipe: 'Pindah', jumlah: 20, ket: 'Transfer ke gudang Medan', petugas: 'Admin Wilayah' },
+            { id: 'TRX-007', tanggal: '2025-04-01', kode: 'ASIP4301', nama: 'Pengantar Ilmu Komunikasi', tipe: 'Keluar', jumlah: 18, ket: 'Distribusi mahasiswa aktif', petugas: 'Staf Distribusi' },
+            { id: 'TRX-008', tanggal: '2025-04-05', kode: 'MKDU4110', nama: 'Bahasa Indonesia', tipe: 'Masuk', jumlah: 120, ket: 'Restock dari pusat', petugas: 'Admin Pusat' },
+            { id: 'TRX-009', tanggal: '2025-04-10', kode: 'MSIM4101', nama: 'Pengantar Sistem Informasi', tipe: 'Keluar', jumlah: 80, ket: 'Pengiriman DO Yogyakarta', petugas: 'Staf Distribusi' },
+            { id: 'TRX-010', tanggal: '2025-04-15', kode: 'ASIP4301', nama: 'Pengantar Ilmu Komunikasi', tipe: 'Masuk', jumlah: 50, ket: 'Pengadaan tambahan', petugas: 'Admin Pusat' },
+            { id: 'TRX-011', tanggal: '2025-04-20', kode: 'MKDU4110', nama: 'Bahasa Indonesia', tipe: 'Pindah', jumlah: 30, ket: 'Transfer ke cabang Semarang', petugas: 'Admin Wilayah' },
+            { id: 'TRX-012', tanggal: '2025-05-01', kode: 'MSIM4101', nama: 'Pengantar Sistem Informasi', tipe: 'Masuk', jumlah: 60, ket: 'Pengadaan modul edisi baru', petugas: 'Admin Pusat' },
+        ];
+
+        const typeClass = { Masuk: 'type-masuk', Keluar: 'type-keluar', Pindah: 'type-pindah' };
+        const typeIcon = { Masuk: '📥', Keluar: '📤', Pindah: '🔄' };
+
+        let filtered = [...txRaw];
+        let sortKey = 'tanggal', sortDir = -1;
+        let currentPage = 1;
+        const perPage = 8;
+
+        function getFiltered() {
+            const q = document.getElementById('searchTx').value.toLowerCase();
+            const tp = document.getElementById('filterTipe').value;
+            const kd = document.getElementById('filterKode').value;
+            const tg = document.getElementById('filterTgl').value;
+            return txRaw.filter(t =>
+                (t.id.toLowerCase().includes(q) || t.nama.toLowerCase().includes(q) || t.kode.toLowerCase().includes(q)) &&
+                (!tp || t.tipe === tp) && (!kd || t.kode === kd) && (!tg || t.tanggal === tg)
+            ).sort((a, b) => {
+                const va = a[sortKey], vb = b[sortKey];
+                return va < vb ? sortDir : va > vb ? -sortDir : 0;
+            });
+        }
+
+        function renderTable() {
+            filtered = getFiltered();
+            const start = (currentPage - 1) * perPage;
+            const page = filtered.slice(start, start + perPage);
+            const tbody = document.getElementById('txBody');
+            const empty = document.getElementById('emptyTx');
+
+            tbody.innerHTML = '';
+            if (!filtered.length) { empty.classList.remove('hidden'); renderPagination(); return; }
+            empty.classList.add('hidden');
+
+            page.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => showDetail(t);
+                tr.innerHTML = `
+          <td style="font-family:monospace;font-size:12px;font-weight:700;color:var(--primary-dk);">${t.id}</td>
+          <td style="color:var(--muted);font-size:13px;">${new Date(t.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+          <td><span style="font-size:12px;background:var(--primary-lt);color:var(--primary-dk);padding:3px 9px;border-radius:6px;font-weight:700;">${t.kode}</span></td>
+          <td style="font-weight:600;max-width:180px;">${t.nama}</td>
+          <td><span class="tx-type ${typeClass[t.tipe]}">${typeIcon[t.tipe]} ${t.tipe}</span></td>
+          <td style="font-weight:800;${t.tipe === 'Keluar' ? 'color:var(--danger);' : t.tipe === 'Masuk' ? 'color:#2E7D32;' : 'color:var(--primary-dk);'}">${t.tipe === 'Keluar' ? '-' : '+'} ${t.jumlah} unit</td>
+          <td style="color:var(--muted);font-size:13px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${t.ket}">${t.ket}</td>
+          <td><button class="btn-secondary" style="padding:5px 12px;font-size:12px;" onclick="event.stopPropagation();showDetail(${JSON.stringify(t).replace(/"/g, '&quot;')})">Lihat</button></td>
+        `;
+                tbody.appendChild(tr);
+            });
+            renderPagination();
+            updateStats();
+        }
+
+        function renderPagination() {
+            const total = filtered.length;
+            const pages = Math.ceil(total / perPage);
+            const start = Math.min((currentPage - 1) * perPage + 1, total);
+            const end = Math.min(currentPage * perPage, total);
+            document.getElementById('pageInfo').textContent = `${start}–${end} dari ${total} transaksi`;
+            document.getElementById('resultCount').textContent = `${total} transaksi`;
+            document.getElementById('btnPrev').disabled = currentPage === 1;
+            document.getElementById('btnNext').disabled = currentPage >= pages;
+            const nums = document.getElementById('pageNums');
+            nums.innerHTML = '';
+            for (let i = 1; i <= pages; i++) {
+                const b = document.createElement('button');
+                b.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                b.textContent = i;
+                b.onclick = () => { currentPage = i; renderTable(); };
+                nums.appendChild(b);
+            }
+        }
+
+        function updateStats() {
+            const all = txRaw;
+            document.getElementById('statTotal').textContent = all.length;
+            document.getElementById('statMasuk').textContent = all.filter(t => t.tipe === 'Masuk').length;
+            document.getElementById('statKeluar').textContent = all.filter(t => t.tipe === 'Keluar').length;
+            document.getElementById('statUnit').textContent = all.reduce((s, t) => s + t.jumlah, 0).toLocaleString('id-ID');
+        }
+
+        function sortBy(key) {
+            if (sortKey === key) sortDir *= -1;
+            else { sortKey = key; sortDir = -1; }
+            currentPage = 1;
+            renderTable();
+        }
+
+        function changePage(dir) {
+            const pages = Math.ceil(filtered.length / perPage);
+            currentPage = Math.max(1, Math.min(currentPage + dir, pages));
+            renderTable();
+        }
+
+        function resetFilter() {
+            ['searchTx', 'filterTgl'].forEach(id => document.getElementById(id).value = '');
+            ['filterTipe', 'filterKode'].forEach(id => document.getElementById(id).value = '');
+            currentPage = 1;
+            renderTable();
+        }
+
+        function showDetail(t) {
+            const c = document.getElementById('detailContent');
+            c.innerHTML = `
+        <div class="detail-row"><span class="detail-label">ID Transaksi</span><span class="detail-val" style="font-family:monospace;">${t.id}</span></div>
+        <div class="detail-row"><span class="detail-label">Tanggal</span><span class="detail-val">${new Date(t.tanggal).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
+        <div class="detail-row"><span class="detail-label">Kode Barang</span><span class="detail-val">${t.kode}</span></div>
+        <div class="detail-row"><span class="detail-label">Nama Bahan Ajar</span><span class="detail-val">${t.nama}</span></div>
+        <div class="detail-row"><span class="detail-label">Tipe Transaksi</span><span class="detail-val"><span class="tx-type ${typeClass[t.tipe]}">${typeIcon[t.tipe]} ${t.tipe}</span></span></div>
+        <div class="detail-row"><span class="detail-label">Jumlah</span><span class="detail-val">${t.jumlah} unit</span></div>
+        <div class="detail-row"><span class="detail-label">Keterangan</span><span class="detail-val">${t.ket}</span></div>
+        <div class="detail-row"><span class="detail-label">Petugas</span><span class="detail-val">${t.petugas}</span></div>
+      `;
+            document.getElementById('modalDetail').classList.add('open');
+        }
+
+        function closeModal() { document.getElementById('modalDetail').classList.remove('open'); }
+        document.getElementById('modalDetail').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+        ['searchTx', 'filterTipe', 'filterKode', 'filterTgl'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => { currentPage = 1; renderTable(); });
+            document.getElementById(id).addEventListener('change', () => { currentPage = 1; renderTable(); });
+        });
+
+        renderTable();
+    </script>
+</body>
+
+</html>
